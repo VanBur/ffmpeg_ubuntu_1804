@@ -13,6 +13,7 @@ CUDA_REPO_KEY="https://developer.download.nvidia.com/compute/cuda/repos/ubuntu$U
 CUDA_DIR="/usr/local/cuda"
 WORK_DIR="$HOME/ffmpeg-build-static-sources"
 DEST_DIR="$HOME/ffmpeg-build-static-binaries"
+PATH_DIR="/usr/local/bin"
 
 mkdir -p "$WORK_DIR" "$DEST_DIR" "$DEST_DIR/bin"
 
@@ -219,6 +220,11 @@ compileFfmpeg(){
     hash -r
 }
 
+moveBinAndCleanUp(){
+    mv "$DEST_DIR/bin/*" "$PATH_DIR"
+    rm -r "$WORK_DIR" "$DEST_DIR"
+}
+
 installAptLibs
 installCUDASDK
 installNvidiaSDK
@@ -235,5 +241,6 @@ compileLibMP3Lame
 compileLibOpus
 compileLibAss
 compileFfmpeg
+moveBinAndCleanUp
 
 ### basicly copied from https://github.com/ilyaevseev/ffmpeg-build/blob/master/ffmpeg-nvenc-build.sh
