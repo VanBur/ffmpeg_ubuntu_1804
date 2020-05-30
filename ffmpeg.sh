@@ -221,8 +221,8 @@ compileFfmpeg(){
 }
 
 moveBinAndCleanUp(){
-    mv "$DEST_DIR/bin/*" "$PATH_DIR"
-    rm -r "$WORK_DIR" "$DEST_DIR"
+    mv $DEST_DIR/bin/* $PATH_DIR
+    rm -r $WORK_DIR $DEST_DIR
 }
 
 installAptLibs
