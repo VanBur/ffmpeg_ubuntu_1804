@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# apt-get update && \
+# apt-get -y install sudo vim
+
 UBUNTU_VERSION="1804"
 NASM_VERSION="2.14rc15"
 YASM_VERSION="1.3.0"
@@ -10,7 +13,7 @@ LASS_VERSION="0.14.0"
 FONT_CONFIG_VERSION="2.13.92"
 CUDA_VERSION="10.2.89-1"
 CUDA_REPO_KEY="https://developer.download.nvidia.com/compute/cuda/repos/ubuntu$UBUNTU_VERSION/x86_64/7fa2af80.pub"
-CUDA_DIR="/usr/local/cuda"
+FFMPEG_VERSION="4.2.3"
 WORK_DIR="$HOME/ffmpeg-build-static-sources"
 DEST_DIR="$HOME/ffmpeg-build-static-binaries"
 PATH_DIR="/usr/local/bin"
@@ -36,9 +39,8 @@ Clone() {
 }
 
 installAptLibs() {
-    local PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial"
     sudo apt-get update
-    sudo apt-get -y install $PKGS \
+    sudo apt-get -y install autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial \
       build-essential pkg-config texi2html software-properties-common \
       libfreetype6-dev libgpac-dev libsdl1.2-dev libtheora-dev libva-dev \
       libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev zlib1g-dev libfribidi-dev gperf \
@@ -185,7 +187,11 @@ compileLibAss() {
 }
 
 compileFfmpeg(){
-    Clone https://github.com/FFmpeg/FFmpeg -b master
+    local CUDA_DIR="/usr/local/cuda"
+    cd "$WORK_DIR/"
+    wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 && \
+    tar xjvf ffmpeg-snapshot.tar.bz2 && \
+    cd "ffmpeg-${FFMPEG_VERSION}" && \
 
     export PATH="$CUDA_DIR/bin:$PATH"  # ..path to nvcc
     PKG_CONFIG_PATH="$DEST_DIR/lib/pkgconfig:$DEST_DIR/lib64/pkgconfig" \
